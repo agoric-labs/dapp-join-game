@@ -14,6 +14,7 @@ import {
 } from '@agoric/web-components';
 import { subscribeLatest } from '@agoric/notifier';
 import { stringifyAmountValue } from '@agoric/ui-components';
+import { makeCopyBag } from '@agoric/store';
 
 type Wallet = Awaited<ReturnType<typeof makeAgoricWalletConnection>>;
 
@@ -22,10 +23,17 @@ const watcher = makeAgoricChainStorageWatcher(
   'agoriclocal'
 );
 
+interface CopyBag {
+  payload: Array<[string, bigint]>;
+}
+
 interface Purse {
   brand: unknown;
   brandPetname: string;
-  currentAmount: { brand: unknown; value: bigint | Array<[string, bigint]> };
+  currentAmount: {
+    brand: unknown;
+    value: bigint | CopyBag;
+  };
   displayInfo: {
     decimalPlaces: number;
     assetKind: unknown;
@@ -79,17 +87,16 @@ const makeOffer = () => {
   const placeBrand = brands?.find(([name]) => name === 'Place')?.at(1);
   const istBrand = brands?.find(([name]) => name === 'IST')?.at(1);
 
+  const value = makeCopyBag([
+    ['Park Place', 1n],
+    ['Boardwalk', 1n],
+    ['Water Works', 1n],
+  ]);
+
   const want = {
     Places: {
       brand: placeBrand,
-      value: {
-        '#tag': 'copyBag',
-        payload: [
-          ['Park Place', 1n],
-          ['Boardwalk', 1n],
-          ['Water Works', 1n],
-        ],
-      },
+      value,
     },
   };
 
@@ -169,14 +176,14 @@ function App() {
             <div>
               <b>Places: </b>
               {placesPurse ? (
-                <ul>
-                  {(
-                    placesPurse.currentAmount.value as Array<[string, bigint]>
-                  ).map(([name, number]) => (
-                    <li>
-                      {String(number)} {name}
-                    </li>
-                  ))}
+                <ul style={{ marginTop: 0, textAlign: 'left' }}>
+                  {(placesPurse.currentAmount.value as CopyBag).payload.map(
+                    ([name, number]) => (
+                      <li key={name}>
+                        {String(number)} {name}
+                      </li>
+                    )
+                  )}
                 </ul>
               ) : (
                 'None'
