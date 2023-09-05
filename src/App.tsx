@@ -88,9 +88,8 @@ const makeOffer = () => {
   const istBrand = brands?.find(([name]) => name === 'IST')?.at(1);
 
   const value = makeCopyBag([
-    ['Park Place', 1n],
-    ['Boardwalk', 1n],
-    ['Water Works', 1n],
+    ['FTX Arena', 2n],
+    ['Crypto.com Arena', 1n],
   ]);
 
   const want = {
@@ -161,35 +160,42 @@ function App() {
       <h1>Vite + React + Agoric</h1>
       <div className="card">
         <div>
-          {wallet && <div>{wallet.address}</div>}
-          {istPurse && (
-            <div>
-              <b>IST: </b>
-              {stringifyAmountValue(
-                istPurse.currentAmount,
-                istPurse.displayInfo.assetKind,
-                istPurse.displayInfo.decimalPlaces
-              )}
-            </div>
-          )}
           {wallet && (
-            <div>
-              <b>Places: </b>
-              {placesPurse ? (
-                <ul style={{ marginTop: 0, textAlign: 'left' }}>
-                  {(placesPurse.currentAmount.value as CopyBag).payload.map(
-                    ([name, number]) => (
-                      <li key={name}>
-                        {String(number)} {name}
-                      </li>
-                    )
-                  )}
-                </ul>
-              ) : (
-                'None'
-              )}
-            </div>
+            <>
+              <div>{wallet.address}</div>
+              <h2 style={{ marginTop: 4, marginBottom: 4 }}>Purses</h2>
+            </>
           )}
+          <div style={{ textAlign: 'left' }}>
+            {istPurse && (
+              <div>
+                <b>IST: </b>
+                {stringifyAmountValue(
+                  istPurse.currentAmount,
+                  istPurse.displayInfo.assetKind,
+                  istPurse.displayInfo.decimalPlaces
+                )}
+              </div>
+            )}
+            {wallet && (
+              <div>
+                <b>Places:</b>
+                {placesPurse ? (
+                  <ul style={{ marginTop: 0, textAlign: 'left' }}>
+                    {(placesPurse.currentAmount.value as CopyBag).payload.map(
+                      ([name, number]) => (
+                        <li key={name}>
+                          {String(number)} {name}
+                        </li>
+                      )
+                    )}
+                  </ul>
+                ) : (
+                  'None'
+                )}
+              </div>
+            )}
+          </div>
         </div>
         <button onClick={onClick}>{buttonLabel}</button>
         <p>
