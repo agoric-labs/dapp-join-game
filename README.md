@@ -1,3 +1,7 @@
+# OBSOLETE
+
+See https://github.com/agoric-labs/dapp-game-places instead.
+
 # Agoric App Starter: Simple Game
 
 This is a simple app for the [Agoric smart contract platform](https://docs.agoric.com/).
